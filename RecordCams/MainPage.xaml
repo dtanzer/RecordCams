@@ -19,6 +19,7 @@
 
         <StackPanel Grid.Row="0" Grid.ColumnSpan="2">
             <Button x:Name="RecordStop" Content="Record" Click="RecordButtonClicked"/>
+            <Button x:Name="Quit" Content="Quit" Click="QuitButtonClicked"/>
         </StackPanel>
         <StackPanel Grid.Row="1" Grid.Column="0">
             <local:Camera x:Name="Camera1"></local:Camera>

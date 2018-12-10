@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="31d8783b-de32-419a-becd-9bd04442bffd" Publisher="CN=busin" Version="0.1.0.0" />
+  <Identity Name="31d8783b-de32-419a-becd-9bd04442bffd" Publisher="CN=busin" Version="0.2.2.0" />
   <mp:PhoneIdentity PhoneProductId="31d8783b-de32-419a-becd-9bd04442bffd" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>RecordCams</DisplayName>

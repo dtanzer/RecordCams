@@ -19,6 +19,11 @@ namespace RecordCams
             this.InitializeComponent();
         }
 
+        void QuitButtonClicked(object sender, RoutedEventArgs e)
+        {
+            CoreApplication.Exit();
+        }
+
         void RecordButtonClicked(object sender, RoutedEventArgs e)
         {
             if(isRecording)
@@ -29,7 +34,6 @@ namespace RecordCams
                 RecordStop.Content = "Record";
 
                 isRecording = false;
-                CoreApplication.Exit();
             }
             else
             {
