@@ -13,9 +13,20 @@ namespace RecordCams
     {
 
         private bool isRecording;
+        private string _ProjectNameText;
+        private int sequenceNumber = 0;
+        Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
 
         public MainPage()
         {
+            if(localSettings.Values["ProjectName"] != null)
+            {
+                _ProjectNameText = (string) localSettings.Values["ProjectName"];
+            }
+            if(localSettings.Values["SequenceNumber"] != null)
+            {
+                sequenceNumber = (int) localSettings.Values["SequenceNumber"];
+            }
             this.InitializeComponent();
         }
 
@@ -37,12 +48,28 @@ namespace RecordCams
             }
             else
             {
-                Camera1.StartRecording();
-                Camera2.StartRecording();
+                sequenceNumber++;
+                localSettings.Values["SequenceNumber"] = 0;
+
+                Camera1.StartRecording(ProjectNameText, sequenceNumber);
+                Camera2.StartRecording(ProjectNameText, sequenceNumber);
 
                 RecordStop.Content = "Stop";
 
                 isRecording = true;
+            }
+        }
+
+        public string ProjectNameText
+        {
+            get { return _ProjectNameText; }
+            set
+            {
+                localSettings.Values["ProjectName"] = value;
+                localSettings.Values["SequenceNumber"] = 0;
+
+                sequenceNumber = 0;
+                _ProjectNameText = value;
             }
         }
     }

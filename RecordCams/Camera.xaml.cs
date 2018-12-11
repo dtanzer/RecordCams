@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,14 +15,18 @@ using Windows.UI.Core;
 
 namespace RecordCams
 {
-    partial class Camera
+    partial class Camera : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         private MediaCapture mediaCapture;
         private bool isPreviewing;
         LowLagMediaRecording _mediaRecording;
 
         public ObservableCollection<DeviceInformation> VideoSources = new ObservableCollection<DeviceInformation>();
         private DeviceInformation _SelectedVideoSource;
+
+        ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
 
         public DeviceInformation SelectedVideoSource
         {
@@ -32,7 +37,9 @@ namespace RecordCams
             set
             {
                 this._SelectedVideoSource = value;
-                this.StartPreviewAsync();
+                localSettings.Values[this.Name + "Video"] = value.Id;
+                this.InitializeVideo();
+                OnPropertyChanged("SelectedVideoSource");
             }
         }
 
@@ -48,7 +55,9 @@ namespace RecordCams
             set
             {
                 this._SelectedAudioSource = value;
-                this.StartPreviewAsync();
+                localSettings.Values[this.Name + "Audio"] = value.Id;
+                this.InitializeVideo();
+                OnPropertyChanged("SelectedAudioSource");
             }
         }
 
@@ -59,10 +68,33 @@ namespace RecordCams
             _mediaRecording = null;
         }
 
-        internal async void StartRecording()
+        private string _CameraNameText = "";
+        string CameraNameText {
+            get
+            {
+                return _CameraNameText;
+            }
+
+            set
+            {
+                this._CameraNameText = value;
+                localSettings.Values[this.Name + "Name"] = value;
+                OnPropertyChanged("CameraNameText");
+            }
+        }
+
+        internal async void StartRecording(string projectName, int sequenceNumber)
         {
-            var myVideos = await Windows.Storage.StorageLibrary.GetLibraryAsync(Windows.Storage.KnownLibraryId.Videos);
-            StorageFile file = await myVideos.SaveFolder.CreateFileAsync(this.Name + ".mp4", CreationCollisionOption.GenerateUniqueName);
+            bool hasCameraName = _CameraNameText != null && _CameraNameText.Length > 0;
+            string baseName = hasCameraName ? _CameraNameText : this.Name;
+
+            bool hasProjectName = projectName != null && projectName.Length > 0;
+            string project = hasProjectName ? projectName : "RecordCamsProject";
+
+            string name = project + "\\" + sequenceNumber + "_" + baseName + ".mp4";
+
+            var myVideos = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Videos);
+            StorageFile file = await myVideos.SaveFolder.CreateFileAsync(name, CreationCollisionOption.GenerateUniqueName);
             _mediaRecording = await mediaCapture.PrepareLowLagRecordToStorageFileAsync(
                     MediaEncodingProfile.CreateMp4(VideoEncodingQuality.HD1080p), file);
             mediaCapture.RecordLimitationExceeded += MediaCapture_RecordLimitationExceeded;
@@ -78,13 +110,24 @@ namespace RecordCams
         public Camera()
         {
             this.InitializeComponent();
+            this.Loaded += Camera_Loaded;
+        }
+
+        private void Camera_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            if (localSettings.Values[this.Name + "Name"] != null)
+            {
+                CameraNameText = (string)localSettings.Values[this.Name + "Name"];
+            }
             this.AddVideoSourcesAsync();
-            this.InitializeVideo();
         }
 
         private async void InitializeVideo()
         {
-            await this.StartPreviewAsync();
+            if (_SelectedVideoSource != null && _SelectedAudioSource != null)
+            {
+                await this.StartPreviewAsync();
+            }
         }
 
         private async void AddVideoSourcesAsync()
@@ -95,31 +138,48 @@ namespace RecordCams
         private async Task InitializeVideoSourcesAsync()
         {
             DeviceInformationCollection videoCollection = await DeviceInformation.FindAllAsync(DeviceClass.VideoCapture);
+            string selectedVideoId = (string) localSettings.Values[this.Name + "Video"];
 
+            DeviceInformation currentSelectedVideoSource = null;
             foreach (var deviceInfo in videoCollection)
             {
                 VideoSources.Add(deviceInfo);
+                if(deviceInfo.Id == selectedVideoId)
+                {
+                    currentSelectedVideoSource = deviceInfo;
+                }
+            }
+            if(currentSelectedVideoSource != null)
+            {
+                SelectedVideoSource = currentSelectedVideoSource;
             }
 
             DeviceInformationCollection audioCollection = await DeviceInformation.FindAllAsync(DeviceClass.AudioCapture);
+            string selectedAudioId = (string)localSettings.Values[this.Name + "Audio"];
 
+            DeviceInformation currentSelectedAudioSource = null;
             foreach (var deviceInfo in audioCollection)
             {
                 AudioSources.Add(deviceInfo);
+                if (deviceInfo.Id == selectedAudioId)
+                {
+                    currentSelectedAudioSource = deviceInfo;
+                }
+            }
+            if(currentSelectedAudioSource != null)
+            {
+                SelectedAudioSource = currentSelectedAudioSource;
             }
         }
 
         private async Task StartPreviewAsync()
         {
-            if(_SelectedVideoSource == null)
-            {
-                return;
-            }
             try
             {
                 if (mediaCapture != null)
                 {
                     await mediaCapture.StopPreviewAsync();
+                    mediaCapture.Dispose();
                 }
                 mediaCapture = new MediaCapture();
 
@@ -178,6 +238,15 @@ namespace RecordCams
         private void MediaCapture_Failed(MediaCapture sender, MediaCaptureFailedEventArgs errorEventArgs)
         {
             throw new NotImplementedException();
+        }
+
+        protected void OnPropertyChanged(string name)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(name));
+            }
         }
     }
 }

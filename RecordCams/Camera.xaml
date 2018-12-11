@@ -9,7 +9,8 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -17,22 +18,12 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" Grid.Column="0">
-            <ComboBox Name="VideoSourcesCombo" Header="Video Sources" 
-                      ItemsSource="{x:Bind VideoSources}"
-                      SelectedItem="{x:Bind SelectedVideoSource, Mode=TwoWay, Converter={StaticResource DeviceInfoConverter}}">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Converter={StaticResource DeviceNameConverter}}"/>
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
-        </StackPanel>
-
+        <TextBox x:Name="CameraName" PlaceholderText="Camera Name" Grid.Column="0" Text="{x:Bind CameraNameText, Mode=TwoWay}" />
+        
         <StackPanel Grid.Row="0" Grid.Column="1">
-            <ComboBox Name="AudioSourcesCombo" Header="Audio Sources" 
-                      ItemsSource="{x:Bind AudioSources}"
-                      SelectedItem="{x:Bind SelectedAudioSource, Mode=TwoWay, Converter={StaticResource DeviceInfoConverter}}">
+            <ComboBox Name="VideoSourcesCombo" 
+                      ItemsSource="{x:Bind VideoSources, Mode=OneWay}"
+                      SelectedItem="{Binding SelectedVideoSource, Mode=TwoWay, Converter={StaticResource DeviceInfoConverter}}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Converter={StaticResource DeviceNameConverter}}"/>
@@ -41,7 +32,19 @@
             </ComboBox>
         </StackPanel>
 
-        <StackPanel Grid.Row="1" Grid.ColumnSpan="2">
+        <StackPanel Grid.Row="0" Grid.Column="2">
+            <ComboBox Name="AudioSourcesCombo" 
+                      ItemsSource="{x:Bind AudioSources, Mode=OneWay}"
+                      SelectedItem="{Binding SelectedAudioSource, Mode=TwoWay, Converter={StaticResource DeviceInfoConverter}}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource DeviceNameConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Grid.ColumnSpan="3">
             <CaptureElement Name="PreviewControl" Stretch="Uniform"/>
         </StackPanel>
     </Grid>
