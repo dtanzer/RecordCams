@@ -36,10 +36,13 @@ namespace RecordCams
             }
             set
             {
-                this._SelectedVideoSource = value;
-                localSettings.Values[this.Name + "Video"] = value.Id;
-                this.InitializeVideo();
-                OnPropertyChanged("SelectedVideoSource");
+                if (value != _SelectedVideoSource)
+                {
+                    this._SelectedVideoSource = value;
+                    localSettings.Values[this.Name + "Video"] = value.Id;
+                    this.InitializeVideo();
+                    OnPropertyChanged("SelectedVideoSource");
+                }
             }
         }
 
@@ -54,10 +57,13 @@ namespace RecordCams
             }
             set
             {
-                this._SelectedAudioSource = value;
-                localSettings.Values[this.Name + "Audio"] = value.Id;
-                this.InitializeVideo();
-                OnPropertyChanged("SelectedAudioSource");
+                if (value != _SelectedAudioSource)
+                {
+                    this._SelectedAudioSource = value;
+                    localSettings.Values[this.Name + "Audio"] = value.Id;
+                    this.InitializeVideo();
+                    OnPropertyChanged("SelectedAudioSource");
+                }
             }
         }
 
