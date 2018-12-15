@@ -49,7 +49,7 @@ namespace RecordCams
             else
             {
                 sequenceNumber++;
-                localSettings.Values["SequenceNumber"] = 0;
+                localSettings.Values["SequenceNumber"] = sequenceNumber;
 
                 Camera1.StartRecording(ProjectNameText, sequenceNumber);
                 Camera2.StartRecording(ProjectNameText, sequenceNumber);

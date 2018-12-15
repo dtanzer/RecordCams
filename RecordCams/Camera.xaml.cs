@@ -97,7 +97,7 @@ namespace RecordCams
             bool hasProjectName = projectName != null && projectName.Length > 0;
             string project = hasProjectName ? projectName : "RecordCamsProject";
 
-            string name = project + "\\" + sequenceNumber + "_" + baseName + ".mp4";
+            string name = project + "\\" + sequenceNumber.ToString("000") + "_" + baseName + ".mp4";
 
             var myVideos = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Videos);
             StorageFile file = await myVideos.SaveFolder.CreateFileAsync(name, CreationCollisionOption.GenerateUniqueName);
