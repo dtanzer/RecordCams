@@ -36,19 +36,19 @@ namespace RecordCams
         public async Task CancelRecordingAsync()
         {
             await Camera1.CancelRecordingAsync();
-            await Camera2.CancelRecordingAsync();
+            //await Camera2.CancelRecordingAsync();
         }
 
         public async Task StartRecordingAsync(string projectNameText, int sequenceNumber)
         {
             await Camera1.StartRecordingAsync(projectNameText, sequenceNumber);
-            await Camera2.StartRecordingAsync(projectNameText, sequenceNumber);
+            //await Camera2.StartRecordingAsync(projectNameText, sequenceNumber);
         }
 
         public async Task StopRecordingAsync()
         {
             await Camera1.StopRecordingAsync();
-            await Camera2.StopRecordingAsync();
+            //await Camera2.StopRecordingAsync();
         }
     }
 }
