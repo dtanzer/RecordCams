@@ -17,12 +17,16 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <TextBox x:Name="ProjectName" PlaceholderText="Project Name" Grid.Column="0" Text="{x:Bind ProjectNameText, Mode=TwoWay}" />
-        <Button x:Name="RecordStop" Content="Record" Click="RecordButtonClicked" Grid.Column="1">
+        <Button x:Name="RecordStop" Height="36" Click="RecordButtonClicked" Grid.Column="1">
+            <Image x:Name="RecordStopImage" Source="Assets/IconRecord.png" Stretch="UniformToFill"/>
+
             <Button.KeyboardAccelerators>
                 <KeyboardAccelerator Key="PageDown" />
             </Button.KeyboardAccelerators>
         </Button>
-        <Button x:Name="Cancel" Content="Cancel" Click="CancelButtonClicked" Grid.Column="2" Visibility="Collapsed">
+        <Button x:Name="Cancel" Height="36" Click="CancelButtonClicked" Grid.Column="2" Visibility="Collapsed">
+            <Image Source="Assets/IconCancel.png" Stretch="UniformToFill"/>
+            
             <Button.KeyboardAccelerators>
                 <KeyboardAccelerator Key="PageUp" />
             </Button.KeyboardAccelerators>

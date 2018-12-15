@@ -118,6 +118,9 @@
     <None Include="RecordCams_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\IconCancel.png" />
+    <Content Include="Assets\IconRecord.png" />
+    <Content Include="Assets\IconStop.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />

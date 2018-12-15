@@ -11,6 +11,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
@@ -23,6 +24,8 @@ namespace RecordCams
         private string _ProjectNameText;
         private int sequenceNumber = 0;
         Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+        private BitmapImage RECORD_ICON = new BitmapImage(new Uri("ms-appx:///Assets/IconRecord.png"));
+        private BitmapImage STOP_ICON = new BitmapImage(new Uri("ms-appx:///Assets/IconStop.png"));
 
         public RecorderControls()
         {
@@ -50,7 +53,7 @@ namespace RecordCams
             {
                 await Recorder.StopRecordingAsync();
 
-                RecordStop.Content = "Record";
+                RecordStopImage.Source = RECORD_ICON;
                 Cancel.Visibility = Visibility.Collapsed;
 
                 isRecording = false;
@@ -62,7 +65,7 @@ namespace RecordCams
 
                 await Recorder.StartRecordingAsync(ProjectNameText, sequenceNumber);
 
-                RecordStop.Content = "Stop";
+                RecordStopImage.Source = STOP_ICON;
                 Cancel.Visibility = Visibility.Visible;
 
                 isRecording = true;
@@ -76,7 +79,7 @@ namespace RecordCams
             sequenceNumber--;
             localSettings.Values["SequenceNumber"] = sequenceNumber;
 
-            RecordStop.Content = "Record";
+            RecordStopImage.Source = RECORD_ICON;
             Cancel.Visibility = Visibility.Collapsed;
 
             isRecording = false;
