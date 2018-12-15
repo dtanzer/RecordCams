@@ -21,8 +21,8 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
             <TextBox x:Name="ProjectName" PlaceholderText="Project Name" Grid.Column="0" Text="{x:Bind ProjectNameText, Mode=TwoWay}" />
@@ -31,7 +31,11 @@
                     <KeyboardAccelerator Key="PageDown" />
                 </Button.KeyboardAccelerators>
             </Button>
-            <Button x:Name="Quit" Content="Quit" Click="QuitButtonClicked" Grid.Column="3"/>
+            <Button x:Name="Cancel" Content="Cancel" Click="CancelButtonClicked" Grid.Column="2" Visibility="Collapsed">
+                <Button.KeyboardAccelerators>
+                    <KeyboardAccelerator Key="PageUp" />
+                </Button.KeyboardAccelerators>
+            </Button>
         </Grid>
         <StackPanel Grid.Row="1" Grid.Column="0">
             <local:Camera x:Name="Camera1"></local:Camera>

@@ -1,4 +1,5 @@
-﻿using Windows.ApplicationModel.Core;
+﻿using System;
+using Windows.ApplicationModel.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -16,6 +17,7 @@ namespace RecordCams
         private string _ProjectNameText;
         private int sequenceNumber = 0;
         Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+        private int numCameras;
 
         public MainPage()
         {
@@ -23,10 +25,21 @@ namespace RecordCams
             {
                 _ProjectNameText = (string) localSettings.Values["ProjectName"];
             }
+
             if(localSettings.Values["SequenceNumber"] != null)
             {
                 sequenceNumber = (int) localSettings.Values["SequenceNumber"];
             }
+
+            if (localSettings.Values["NumCameras"] != null)
+            {
+                numCameras = (int)localSettings.Values["NumCameras"];
+            } else
+            {
+                numCameras = 2;
+                localSettings.Values["NumCameras"] = numCameras;
+            }
+
             this.InitializeComponent();
         }
 
@@ -39,10 +52,11 @@ namespace RecordCams
         {
             if(isRecording)
             {
-                Camera1.StopRecording();
-                Camera2.StopRecording();
+                Camera1.StopRecordingAsync();
+                Camera2.StopRecordingAsync();
 
                 RecordStop.Content = "Record";
+                Cancel.Visibility = Visibility.Visible;
 
                 isRecording = false;
             }
@@ -51,13 +65,28 @@ namespace RecordCams
                 sequenceNumber++;
                 localSettings.Values["SequenceNumber"] = sequenceNumber;
 
-                Camera1.StartRecording(ProjectNameText, sequenceNumber);
-                Camera2.StartRecording(ProjectNameText, sequenceNumber);
+                Camera1.StartRecordingAsync(ProjectNameText, sequenceNumber);
+                Camera2.StartRecordingAsync(ProjectNameText, sequenceNumber);
 
                 RecordStop.Content = "Stop";
+                Cancel.Visibility = Visibility.Visible;
 
                 isRecording = true;
             }
+        }
+
+        async void CancelButtonClicked(object sender, RoutedEventArgs e)
+        {
+            await Camera1.CancelRecordingAsync();
+            await Camera2.CancelRecordingAsync();
+
+            sequenceNumber--;
+            localSettings.Values["SequenceNumber"] = sequenceNumber;
+
+            RecordStop.Content = "Record";
+            Cancel.Visibility = Visibility.Collapsed;
+
+            isRecording = false;
         }
 
         public string ProjectNameText
@@ -65,11 +94,14 @@ namespace RecordCams
             get { return _ProjectNameText; }
             set
             {
-                localSettings.Values["ProjectName"] = value;
-                localSettings.Values["SequenceNumber"] = 0;
+                if (_ProjectNameText != value)
+                {
+                    localSettings.Values["ProjectName"] = value;
+                    localSettings.Values["SequenceNumber"] = 0;
 
-                sequenceNumber = 0;
-                _ProjectNameText = value;
+                    sequenceNumber = 0;
+                    _ProjectNameText = value;
+                }
             }
         }
     }
