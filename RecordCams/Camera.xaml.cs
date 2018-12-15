@@ -78,7 +78,7 @@ namespace RecordCams
             savedVideoFile = null;
         }
 
-        internal async void StopRecordingAsync()
+        internal async Task StopRecordingAsync()
         {
             await _mediaRecording.StopAsync();
             await _mediaRecording.FinishAsync();
@@ -101,7 +101,7 @@ namespace RecordCams
             }
         }
 
-        internal async void StartRecordingAsync(string projectName, int sequenceNumber)
+        internal async Task StartRecordingAsync(string projectName, int sequenceNumber)
         {
             bool hasCameraName = _CameraNameText != null && _CameraNameText.Length > 0;
             string baseName = hasCameraName ? _CameraNameText : this.Name;

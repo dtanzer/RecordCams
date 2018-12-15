@@ -17,26 +17,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" Grid.ColumnSpan="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-
-            <TextBox x:Name="ProjectName" PlaceholderText="Project Name" Grid.Column="0" Text="{x:Bind ProjectNameText, Mode=TwoWay}" />
-            <Button x:Name="RecordStop" Content="Record" Click="RecordButtonClicked" Grid.Column="1">
-                <Button.KeyboardAccelerators>
-                    <KeyboardAccelerator Key="PageDown" />
-                </Button.KeyboardAccelerators>
-            </Button>
-            <Button x:Name="Cancel" Content="Cancel" Click="CancelButtonClicked" Grid.Column="2" Visibility="Collapsed">
-                <Button.KeyboardAccelerators>
-                    <KeyboardAccelerator Key="PageUp" />
-                </Button.KeyboardAccelerators>
-            </Button>
-        </Grid>
+        <local:RecorderControls Name="Controls" Grid.Row="0" Grid.ColumnSpan="2" Recorder="{x:Bind Recorder}"></local:RecorderControls>
         <StackPanel Grid.Row="1" Grid.Column="0">
             <local:Camera x:Name="Camera1"></local:Camera>
         </StackPanel>
